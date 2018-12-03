@@ -24,33 +24,24 @@ class Player {
 class Musics {
     //歌曲
     constructor() {
-        this.songs = [{
-                id: 1,
-                title: 'Driving Home for Christmas',
-                singer: 'Campsite Dream',
-                songUrl: './songs/song.mp3',
-                imageUrl: './images/songs/c.jpg'
-            },
-            {
-                id: 2,
-                title: '认真的雪',
-                singer: '薛之谦',
-                songUrl: './songs/song.mp3',
-                imageUrl: './images/songs/renzhendexue.jpg'
-            },
-            {
-                id: 3,
-                title: '演员',
-                singer: '薛之谦',
-                songUrl: './songs/song.mp3',
-                imageUrl: './images/songs/yanyuan.jpg'
-            }
-        ]
+    	var that = this;
+    	// 同步访问本地JSON文件
+    	$.ajaxSettings.async = false;
+        $.getJSON("json/song.json",function(data){
+        	console.log(data);
+        	that.songs = data.songs;// 获取当前播放的歌曲
+        	that.songList = data.songs;// 缓存所有的歌曲
+        });
+        this.favor= [];// 定义喜欢的歌曲
     }
     //根据索引获取歌曲的方法
     getSongByNum(index) {
         return this.songs[index];
     }
+    setSongs(songs){
+    	this.songs = songs;
+    }
+    
 }
 
 //真正的构建播放器的类
@@ -100,22 +91,48 @@ class PlayerCreator {
         this.bindEventListener();
     }
     //生成播放列表
-    renderSongList() {
-        let _str = '';
-        this.musics.songs.forEach((song, i) => {
-            _str += `<li class="music__list__item">${song.title}</li>`
-        });
+    renderSongList(type) {
+    	// 音乐列表初始化
+    	this.song_list.html("");
+    	let _str = '';
+    	let songs = null;
+    	if(!type || type=="all"){
+    		songs = this.musics.songList;    		
+    	}else if(type == "cn"){
+    		songs = this.musics.songList.filter(function(item){
+    			return item.language == "cn";
+    		});
+    	}else if(type == "en"){
+    		songs = this.musics.songList.filter(function(item){
+    			return item.language == "en";
+    		});
+    	}else if(type == "pre10"){
+    		// 对歌曲的播放的次数进行排序，播放次数越多越靠前
+    		songs = this.musics.favor.sort(function(song1,song2){
+    			return song2.level  - song1.level;
+    		});
+    		songs = songs.slice(0,9);
+    	}
+    	// 如果当前没有播放的歌曲则返回
+    	if(!songs){
+    		return;
+    	}
+    	this.musics.setSongs(songs);
+    	songs.forEach((song, i) => {
+    		    song.title && (_str += `<li class="music__list__item">${song.title}</li>`);
+    	});
         this.song_list.html(_str);
     }
 
     //根据歌曲去渲染视图
     renderSongStyle() {
+    	let song = this.musics.getSongByNum(this.song_index);
         let {
             title,
             singer,
             songUrl,
             imageUrl
-        } = this.musics.getSongByNum(this.song_index);
+        } = song ;
         this.audio.src = songUrl;
         this.render_doms.title.html(title);
         this.render_doms.singer.html(singer);
@@ -124,6 +141,25 @@ class PlayerCreator {
 
         //切换列表中的item的类名 play
         this.song_list.find('.music__list__item').eq(this.song_index).addClass('play').siblings().removeClass('play');
+        
+        // 修改喜欢歌曲的缓存
+        let favorList = this.musics.favor;
+        let favorSong = favorList.find(function(item){
+        	 return item.title == song.title;
+        });
+        if(!favorSong){
+        	song.level = 1;
+        	favorList.push(song);
+        }else{
+        	favorList = favorList.filter(function(item){
+        		return item.title != song.title;
+        	});
+        	let level = song.level;
+        	level++;
+        	favorSong["level"] = level;
+			favorList.push(song);        	
+        }
+        this.musics.favor = favorList;
     }
     //绑定各种事件
     bindEventListener() {
@@ -311,6 +347,7 @@ class PlayerCreator {
     changeSongList(text){
     	$(".icon-show").text(text);
     	$("#showModel").hide();
+    	this.renderSongList(text);
     }
 }
 
