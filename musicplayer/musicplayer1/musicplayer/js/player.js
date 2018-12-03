@@ -67,7 +67,8 @@ class PlayerCreator {
         this.loop_mode = 0; // 1 2
         // 下方歌曲列表容器
         this.song_list = $('.music__list_content');
-
+        // 歌曲喜好选择
+		this.show_list = $('#showModel');
         this.render_doms = { //切换歌曲时需要渲染的dom组
             title: $('.music__info--title'),
             singer: $('.music__info--singer'),
@@ -146,14 +147,19 @@ class PlayerCreator {
         this.$ban = new Btns('.control__volume--icon', {
             click: this.banNotes.bind(this)
         })
+        // 根据喜好显示
+        this.$show = new Btns('.player-control__btn--show',{
+        	click: this.showShowMode.bind(this)
+        });
         //列表点击
         this.song_list.on('click', 'li', (e) => {
             let index = $(e.target).index();
             this.changeSong(index);
         })
-
+        this.show_list.on('click','li',(e) => {
+        	this.changeSongList($(e.target).text());
+        });
         //音量控制 audio标签音量 vlouem 属性控制0-1
-
         new Progress('.control__volume--progress', {
             min: 0,
             max: 1,
@@ -199,6 +205,9 @@ class PlayerCreator {
             //播放完，换歌后，重新播放
             this.audio.play();
         }
+        $(document).on('click',function(event){
+        	$(event.target).is(".icon-show") || $("#showModel").hide();
+        })
 
     }
 
@@ -287,6 +296,21 @@ class PlayerCreator {
             this.audio.muted = true;
             _o_i.removeClass('icon-volume').addClass('icon-muted');
         }
+    }
+    showShowMode(event){
+    	$("#showModel li").each(function(){
+    		let text = $(event.target).text();
+    		if($(this).text() == text){
+    			$(this).hide();
+    		}else{
+    			$(this).show();
+    		}
+    	});
+    	$("#showModel").toggle();
+    }
+    changeSongList(text){
+    	$(".icon-show").text(text);
+    	$("#showModel").hide();
     }
 }
 

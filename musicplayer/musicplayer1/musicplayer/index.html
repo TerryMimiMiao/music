@@ -14,7 +14,7 @@
 <body>
 
 <!-- 播放器 -->
-<div class="music-player">
+<div class="music-player" style="height: ;">
 	<!-- audio标签 -->
 	<audio class="music-player__audio" ></audio>
 	<!-- 播放器主体 -->
@@ -45,6 +45,7 @@
 						<div class="player-control__btn player-control__btn--play"><i class="iconfont icon-play"></i></div>
 						<div class="player-control__btn player-control__btn--next"><i class="iconfont icon-next"></i></div>
 						<div class="player-control__btn player-control__btn--mode"><i class="iconfont icon-loop"></i></div>
+						<div class="player-control__btn player-control__btn--show"><i class="iconfont icon-show">all</i></div>
 					</div>
 					<div class="player-control__volume">
 						<div class="control__volume--icon player-control__btn"><i class="iconfont icon-volume"></i></div>
@@ -71,15 +72,22 @@
 			<li class="music__list__item">123</li> -->
 		</ul>
 	</div>
+	<div id="showModel" class="showModel" style="display: none;">
+		<ul>
+			<li class="favor">all</li>
+			<li class="favor">pre10</li>
+			<li class="favor">en</li>
+			<li class="favor">cn</li>
+		</ul>
+	</div>
 </div>
-
 <script src="js/utill.js"></script>
 <script src="js/jquery.min.js"></script>
 <script src="js/player.js"></script>
 
-<div style="text-align:center;margin:-100px 0; font:normal 14px/24px 'MicroSoft YaHei';color:#ffffff">
+<!--<div style="text-align:center;margin:-100px 0; font:normal 14px/24px 'MicroSoft YaHei';color:#ffffff">
 <p>适用浏览器：360、FireFox、Chrome、Opera、傲游、搜狗、世界之窗. 不支持Safari、IE8及以下浏览器。</p>
 <p>来源：<a href="http://sc.chinaz.com/" target="_blank">站长素材</a></p>
-</div>
+</div>-->
 </body>
 </html>
