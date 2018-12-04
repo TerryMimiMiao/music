@@ -24,14 +24,17 @@ class Player {
 class Musics {
     //歌曲
     constructor() {
-    	var that = this;
+//  	var that = this;
+    	this.songs = data.songs;// 获取当前播放的歌曲
+        this.songList = data.songs;// 缓存所有的歌曲
     	// 同步访问本地JSON文件
-    	$.ajaxSettings.async = false;
-        $.getJSON("json/song.json",function(data){
-        	console.log(data);
-        	that.songs = data.songs;// 获取当前播放的歌曲
-        	that.songList = data.songs;// 缓存所有的歌曲
-        });
+//  	$.ajaxSettings.async = false;
+//      $.getJSON("json/song.json",function(data){
+//      	console.log(data);
+//      	that.songs = data.songs;// 获取当前播放的歌曲
+//      	that.songList = data.songs;// 缓存所有的歌曲
+//      });
+        
         this.favor= [];// 定义喜欢的歌曲
     }
     //根据索引获取歌曲的方法
@@ -111,7 +114,7 @@ class PlayerCreator {
     		songs = this.musics.favor.sort(function(song1,song2){
     			return song2.level  - song1.level;
     		});
-    		songs = songs.slice(0,9);
+    		songs = songs.slice(0,10);
     	}
     	// 如果当前没有播放的歌曲则返回
     	if(!songs){
