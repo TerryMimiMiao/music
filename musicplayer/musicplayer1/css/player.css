@@ -1,17 +1,18 @@
-/* 播放器大小 */
-.music-player {
-    width: 550px;
-}
 
 /* 播放器位置 */
 .music-player {
+	
+    width: 550px;
     position: relative;
-    margin: 200px auto;
+    margin-left: 200px;
+    margin-top: 10px;
 }
 
 /* 歌曲列表 */
 
 .music-player__list {
+	overflow-y: auto;
+	height: 277px;
     width: 100%;
     padding: 10px;
     margin-top: 50px;
@@ -49,7 +50,7 @@
 
 /* 播放器主体 */
 .music-player__main {
-    height: 180px;
+    height: 156PX;
     padding: 25px;
     -webkit-box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
